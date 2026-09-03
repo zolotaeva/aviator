@@ -107,6 +107,22 @@
 			svg.addEventListener('pointerleave', function () {
 				tooltip.classList.remove('is-visible');
 			});
+		} else {
+			svg.addEventListener('click', function (e) {
+				var plot = e.target.closest('.plot');
+				if (!plot) {
+					tooltip.classList.remove('is-visible');
+					return;
+				}
+				if (plot.dataset.status == 'infra') {
+					tooltip.textContent = plot.dataset.name;
+				} else if (plot.dataset.status == 'sold') {
+					tooltip.textContent = STATUS_LABEL[plot.dataset.status];
+				}
+				tooltip.style.left = e.clientX + 'px';
+				tooltip.style.top = e.clientY + 'px';
+				tooltip.classList.add('is-visible');
+			})
 		}
 
 		// ---- Клик — один обработчик на весь SVG (делегирование) ----
@@ -158,10 +174,15 @@
 		document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
 		function closeModal() { modal.classList.remove('is-open'); }
+
+		document.querySelector('.js-callback').addEventListener('click', function (e) {
+			modalCallback.classList.add('is-open');
+		});
 })();
 	
 
 document.addEventListener("DOMContentLoaded", () => {
+
 
 	const gallerySwiper = new Swiper(".gallery__slider", {
 		loop: false,
@@ -178,16 +199,30 @@ document.addEventListener("DOMContentLoaded", () => {
 		grabCursor: true,
 		breakpoints: {
 		320: {
+			slidesPerView: 1.5,
+			spaceBetween: 15,
+			
+			},
+		575: {
+			slidesPerView: 2.5,
+			
+		},
+		767: {
 			slidesPerView: 2.5,
 			spaceBetween: 20,
 		},
-		767: {
-			slidesPerView: 3.5,
-			loopAdditionalSlides: 2,
-		},
 		992: {
+			slidesPerView: 3.5,
+			spaceBetween: 20,
+			},
+		1200: {
+			spaceBetween: 20,
 			slidesPerView: 4.5,
-		},
+			},
+		1400: {
+			spaceBetween: 30,
+			slidesPerView: 4.5,
+		}
 					
 	},
 	});
@@ -203,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		slidesPerView: 1,
 		effect:'fade',
 		loop: true,
+		autoHeight: true,
 		thumbs: {
 			swiper: territoryThumbs,
 		},
@@ -215,12 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	});
 
-	const partnersThumbs = new Swiper('.partners__slider', {
-		freeMode: true,
-		slidesPerView: 4,
-		loop: true,
-		spaceBetween: 30,
-	
-	});
+
 
 });
